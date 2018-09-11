@@ -8,6 +8,9 @@
       <a mat-button routerLink="/authentication/login" routerLinkActive="mat-primary">Login</a>
     </li>
     <li *ngIf="userIsAuthenticated">
+      <a mat-button routerLink="/authentication/password-change" routerLinkActive="mat-primary">Change Password</a>
+    </li>
+    <li *ngIf="userIsAuthenticated">
       <button mat-button (click)="onLogout()">Logout</button>
     </li>
   </ul>

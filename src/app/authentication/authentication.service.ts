@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { AuthenticationData } from './authentication-data.model';
+import { MatDialog } from '@angular/material';
+import { MessageModalComponent } from '../common/message-modal/message-modal.component';
 
 const BACKEND_URL = environment.apiUrl + '/user';
 
@@ -17,7 +19,7 @@ export class AuthenticationService {
   private userId: string;
   private authStatusListener = new Subject<boolean>();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog) {}
 
   getToken() {
     return this.token;
@@ -52,6 +54,23 @@ export class AuthenticationService {
       }, error => {
         this.authStatusListener.next(false);
       });
+  }
+
+  changePassword(id: string, oldPassword: string, newPassword: string) {
+    const passUpdateData = {
+      id: id,
+      oldPassword: oldPassword,
+      newPassword: newPassword
+    };
+    this.http
+    .put<{header: string, message: string}>(BACKEND_URL + '/password-change', passUpdateData)
+    .subscribe(response => {
+      this.dialog.open(MessageModalComponent, {data: {header: response.header, message: response.message}});
+      this.authStatusListener.next(true);
+    }, error => {
+      console.log(error);
+      this.authStatusListener.next(true);
+    });
   }
 
   login(email: string, password: string) {

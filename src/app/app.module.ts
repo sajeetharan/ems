@@ -11,12 +11,14 @@ import { AuthenticationInterceptor } from './authentication/authentication-inter
 import { HeaderComponent } from './header/header.component';
 import { ErrorInterceptor } from './error-interceptor';
 import { ErrorComponent } from './error/error.component';
+import { MessageModalComponent } from './common/message-modal/message-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    ErrorComponent
+    ErrorComponent,
+    MessageModalComponent
   ],
   imports: [
     BrowserModule,
