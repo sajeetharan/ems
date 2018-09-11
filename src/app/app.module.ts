@@ -6,7 +6,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthenticationModule } from './authentication/authentication.module';
 import { AuthenticationInterceptor } from './authentication/authentication-interceptor';
 import { HeaderComponent } from './header/header.component';
 import { ErrorInterceptor } from './error-interceptor';
@@ -32,6 +31,6 @@ import { MessageModalComponent } from './common/message-modal/message-modal.comp
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ErrorComponent]
+  entryComponents: [ErrorComponent, MessageModalComponent]
 })
 export class AppModule { }
