@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthenticationData } from './authentication-data.model';
 
-const BACKEND_URL = environment.apiUrl + '/users/';
+const BACKEND_URL = environment.apiUrl + '/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -85,13 +85,16 @@ export class AuthenticationService {
 
   autoAuthUser() {
     const authInformation = this.getAuthData();
+    console.log('gggg');
     if (!authInformation) {
+      console.log('nnnn');
       return;
     }
     const now = new Date();
     const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
     if (expiresIn > 0) {
       this.token = authInformation.token;
+      console.log('this' + this.token);
       this.isAuthenticated = true;
       this.userId = authInformation.userId;
       this.roleType = authInformation.roleType;
@@ -122,6 +125,7 @@ export class AuthenticationService {
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('roleType', roleType);
+    console.log(token);
   }
 
   private clearAuthData() {
@@ -135,7 +139,8 @@ export class AuthenticationService {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
-    const roleType = localStorage.getItem('userRole');
+    const roleType = localStorage.getItem('roleType');
+    console.log(token);
     if (!token || !expirationDate || !userId || ! roleType) {
       return;
     }
