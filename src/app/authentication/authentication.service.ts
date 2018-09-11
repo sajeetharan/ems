@@ -60,7 +60,8 @@ export class AuthenticationService {
       password: password,
       roleType: ''
     };
-    this.http.post<{token: string, expiresIn: number, userId: string, roleType: string}>(
+    this.http.post<{token: string, expiresIn: number, userId: string,
+      user: {_id: string, role: string}}>(
       BACKEND_URL + '/login',
       authData
     ).subscribe(response => {
@@ -70,8 +71,8 @@ export class AuthenticationService {
         const expiresInDuration = response.expiresIn;
         this.setAuthTimer(expiresInDuration);
         this.isAuthenticated = true;
-        this.userId = response.userId;
-        this.roleType = response.roleType;
+        this.userId = response.user._id;
+        this.roleType = response.user.role;
         this.authStatusListener.next(true);
         const now = new Date();
         const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
@@ -85,16 +86,13 @@ export class AuthenticationService {
 
   autoAuthUser() {
     const authInformation = this.getAuthData();
-    console.log('gggg');
     if (!authInformation) {
-      console.log('nnnn');
       return;
     }
     const now = new Date();
     const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
     if (expiresIn > 0) {
       this.token = authInformation.token;
-      console.log('this' + this.token);
       this.isAuthenticated = true;
       this.userId = authInformation.userId;
       this.roleType = authInformation.roleType;
@@ -114,7 +112,6 @@ export class AuthenticationService {
   }
 
   private setAuthTimer(duration: number) {
-    console.log('Setting timer: ' + duration);
     this.tokenTimer = setTimeout(() => {
       this.logout();
     }, duration * 1000);
@@ -125,7 +122,6 @@ export class AuthenticationService {
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
     localStorage.setItem('roleType', roleType);
-    console.log(token);
   }
 
   private clearAuthData() {
@@ -140,7 +136,6 @@ export class AuthenticationService {
     const expirationDate = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
     const roleType = localStorage.getItem('roleType');
-    console.log(token);
     if (!token || !expirationDate || !userId || ! roleType) {
       return;
     }
